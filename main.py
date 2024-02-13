@@ -1,51 +1,52 @@
-import random
-import word_list
-import ascii_figure
+import ascii_art
+import lists
 
-complete = False
-lifes = 3
-word = random.choice(word_list.words)
-word_lenght = len(word)
-# print(word) #for see the  word, like a hint
 
-display = []
-for _ in range(word_lenght):
-    display += "_"
+def caesar(text, shift, direction):
+    shift = int(shift)
+    encript = False
+    encode_word = []
 
-print("***** HANGMAN GAME *****")
-guess = input("Enter a letter").lower()
+    while not encript:
+        while int(shift) >= 25:
+            shift = input("write a number you shift:\n")
+        shift = int(shift)
+        for n in text:
+            if n not in lists.alphabet:
+                text = input("write your text:\n").lower()
+            elif n in text:
+                index_alphabet = lists.alphabet.index(n)
+                if direction == "ENCODE":
+                    letter_index = index_alphabet + shift
+                elif direction == "DECODE":
+                    letter_index = index_alphabet - shift
+                letter_encode = lists.alphabet[letter_index]
+                encode_word.append(letter_encode)
 
-end_of_game = False
+        if len(encode_word) == len(text):
+            encript = True
 
-while not end_of_game:
-    if guess not in word:
-        lifes -= 1
+    encode_word = ''.join(encode_word)
+    print(encode_word)
 
-    for num in range(word_lenght):
-        letter = word[num]
-        if letter == guess:
-            display[num] = letter
 
-    if lifes == 3:
-        print(ascii_figure.ascii_figure[0])
-    elif lifes == 2:
-        print(ascii_figure.ascii_figure[1])
-    elif lifes == 1:
-        print(ascii_figure.ascii_figure[2])
-    elif lifes == 0:
-        print(ascii_figure.ascii_figure[3])
-        print("                 ** IDIOT YOU LOST THE GAME              **")
+def restart(again):
+    if again == "YES":
+        direction = input("Write what you want to make 'encode' or 'decode':\n").upper()
+        text = input("write your text:\n").lower()
+        shift = input("write a number you shift:\n")
+        caesar(text, shift, direction)
+    elif again == "NO":
+        print("ByeBye")
 
-    if "_" not in display:
-        end_of_game = True
-        print("YOU WIN")
 
-    if lifes == 0:
-        end_of_game = True
+print(ascii_art.logo[0])
+direction = input("Write what you want to make 'encode' or 'decode':\n").upper()
+text = input("write your text:\n").lower()
+shift = input("write a number you shift:\n")
 
-    strWord = "".join(display)
+caesar(text, shift, direction)
 
-    print(strWord)
-    guess = input()
+again = input("You want to restart the program?, Type YES or NO").upper()
 
-print(word)
+restart(again)
